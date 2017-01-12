@@ -1,5 +1,7 @@
 target/
 .mvn/
+.metadata/
+.recommenders/
 *.jar
 *.war
 *.ear

@@ -6,15 +6,15 @@ services:
   ports:
    - "1111:1111"
   links:
-   - logic-microservice
-   - ui-microservice
+   - controller-microservice
+   - view-microservice
 
- logic-microservice:
-  image: blackdev92/logic-microservice
+ controller-microservice:
+  image: blackdev92/controller-microservice
   ports:
    - "2222:2222"
 
- ui-microservice:
-  image: blackdev92/ui-microservice
+ view-microservice:
+  image: blackdev92/view-microservice
   ports:
    - "8080:8080"
