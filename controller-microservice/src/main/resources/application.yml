@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: logic-microservice
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-microservice:1111/eureka/
+server:
+  port: 2222
