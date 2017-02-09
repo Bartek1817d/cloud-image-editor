@@ -1,6 +1,10 @@
 spring:
   application:
     name: controller-microservice
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 eureka:
   client:
     serviceUrl:

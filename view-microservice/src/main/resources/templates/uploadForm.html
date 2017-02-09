@@ -1,26 +1,56 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Editor</title>
+	<link rel="icon" href="icon.png"/>
+</head>
 <body>
-
-	<div th:if="${message}">
-		<h2 th:text="${message}"/>
-	</div>
-
 	<div>
 		<form method="POST" enctype="multipart/form-data" action="/">
-			<table>
-				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+			<table> 
+				<tr><td>File to upload:</td><td><input type="file" name="image" /></td></tr>
+				<tr><td>Hue rotation</td><td><input type="range" name="hue" min="0" max="1" step="0.01"/></td><td><input type="checkbox" checked="true" /></td></tr>
+				<tr><td>Saturation</td><td><input type="range" name="saturation" min="0" max="1" step="0.01"/></td><td><input type="checkbox" checked="true" /></td></tr>	
+				<tr><td>Brightness</td><td><input type="range" name="brightness" min="0" max="1" step="0.01"/></td><td><input type="checkbox" checked="true" /></td></tr>
+				<tr><td>Format</td>
+				<td>
+					<select name="format">
+  						<option value="jpg">JPEG</option>
+  						<option value="png">PNG</option>
+  						<option value="bmp">BMP</option>
+  						<option value="gif">GIF</option>
+					</select>
+				</td></tr>				
+				<tr><td><input type="submit" value="Upload" /></td><td><input type="reset" value="Reset" /></td></tr>
 			</table>
 		</form>
 	</div>
-
-	<div>
-		<ul>
-			<li th:each="file : ${files}">
-				<a th:href="${file}" th:text="${file}" />
-			</li>
-		</ul>
-	</div>
-
+	<script>
+		/*<![CDATA[*/
+		var inputs = document.getElementsByTagName("input");
+		function checkboxEventHandler(event) {
+			var checkbox = event.target;			
+			var rangeInput = checkbox.parentNode.previousSibling.firstChild;
+				if(checkbox.checked)
+					rangeInput.disabled = false;
+				else
+					rangeInput.disabled = true;
+		}
+		function resetEventHandler(event) {
+			for(var i = 0; i < inputs.length; i++) {
+				var input = inputs[i];
+				if(input.type == "range")
+					input.disabled = false;
+			}
+		}
+		for(var i = 0; i < inputs.length; i++) {
+			var input = inputs[i];
+			if(input.type == "checkbox")
+				input.addEventListener("click", checkboxEventHandler);
+			else if(input.type == "reset")
+				input.addEventListener("click", resetEventHandler);
+		}
+		/*]]>*/
+	</script>
 </body>
 </html>
