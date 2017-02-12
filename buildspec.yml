@@ -1,0 +1,11 @@
+version: 0.1
+
+phases:
+  build:
+    commands:
+      - echo Builing project...
+      - mvn package  
+  post_build:
+    commands:
+      - echo Pushing the Docker image...
+      - docker push blackdev92/discovery-microservice:latest  

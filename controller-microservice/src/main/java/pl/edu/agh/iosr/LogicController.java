@@ -1,6 +1,5 @@
 package pl.edu.agh.iosr;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +12,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +21,16 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import pl.edu.agh.iosr.service.ImageEditorService;
 import pl.edu.agh.iosr.utils.GifSequenceWriter;
 
 @Controller
 public class LogicController {
 
 	private final static Logger log = Logger.getLogger(LogicController.class.getName());
+
+	@Autowired
+	private ImageEditorService imageEditorService;
 
 	@PostMapping(value = "/")
 	@ResponseBody
@@ -47,36 +51,18 @@ public class LogicController {
 			gifReader.setInput(iis);
 			for (int i = 0; i < gifReader.getNumImages(true); i++) {
 				BufferedImage frame = gifReader.read(i);
-				gifWriter.writeToSequence(editImage(frame, hue, saturation, brightness));
+				gifWriter.writeToSequence(imageEditorService.editImage(frame, hue, saturation, brightness));
 			}
 			gifWriter.close();
 			return getBytes(ios);
 		} else {
-			BufferedImage processedImage = editImage(ImageIO.read(bais), hue, saturation, brightness);
+			BufferedImage processedImage = imageEditorService.editImage(ImageIO.read(bais), hue, saturation,
+					brightness);
 			ImageIO.write(processedImage, format, baos);
 			return baos.toByteArray();
 		}
 	}
 
-	private BufferedImage editImage(BufferedImage image, float hue, float saturation, float value) {
-		int width = image.getWidth();
-		int height = image.getHeight();
-		BufferedImage processedImage = new BufferedImage(width, height, image.getType());
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				int rgb = image.getRGB(x, y);
-				int r = (rgb >> 16) & 0xff;
-				int g = (rgb >> 8) & 0xff;
-				int b = (rgb) & 0xff;
-				float hsv[] = new float[3];
-				Color.RGBtoHSB(r, g, b, hsv);
-				processedImage.setRGB(x, y, Color.HSBtoRGB(hue == -1 ? hsv[0] : hsv[0] + hue,
-						saturation == -1 ? hsv[1] : saturation, value == -1 ? hsv[2] : value));
-			}
-		}
-		return processedImage;
-	}
-	
 	private byte[] getBytes(ImageOutputStream ios) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(255);
 		ios.seek(0);
