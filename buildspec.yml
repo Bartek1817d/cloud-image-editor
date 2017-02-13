@@ -1,11 +1,27 @@
 version: 0.1
 
 phases:
+  pre_build:
+    commands:
+      - echo Logging in to Docker Hub...
+      - docker login --username="$DOCKER_HUB_USERNAME" --password="$DOCKER_HUB_PASSWORD"
+      - mkdir view
+      - mkdir controller
+      - mkdir discovery
+      - mv view-microservice/src/main/docker/Dockerfile view
+      - mv view-microservice/target/view-microservice-0.0.1.jar view 
+      - mv controller-microservice/src/main/docker/Dockerfile controller
+      - mv controller-microservice/target/controller-microservice-0.0.1.jar controller
+      - mv discovery-microservice/src/main/docker/Dockerfile discovery
+      - mv discovery-microservice/target/discovery-microservice-0.0.1.jar discovery 
   build:
     commands:
-      - echo Builing project...
-      - mvn package  
-  post_build:
-    commands:
-      - echo Pushing the Docker image...
-      - docker push blackdev92/discovery-microservice:latest  
+      - cd view
+      - docker build -t blackdev92/view-microservice .
+      - docker push blackdev92/view-microservice
+      - cd ../controller
+      - docker build -t blackdev92/controller-microservice .
+      - docker push blackdev92/controller-microservice
+      - cd ../discovery
+      - docker build -t blackdev92/discovery-microservice .
+      - docker push blackdev92/discovery-microservice
