@@ -22,3 +22,7 @@ phases:
       - docker push blackdev92/controller-microservice
       - docker build -t blackdev92/discovery-microservice discovery
       - docker push blackdev92/discovery-microservice
+
+artifacts:
+  files:
+    - Dockerrun.aws.json

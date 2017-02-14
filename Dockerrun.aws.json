@@ -1,0 +1,32 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "view-microservice",
+      "image": "blackdev92/view-microservice:latest",
+      "essential": true,
+	  "memory": 400,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8080
+        }
+      ],
+      "links": [
+		"controller-microservice"
+      ]
+    },
+	{
+      "name": "controller-microservice",
+      "image": "blackdev92/controller-microservice:latest",
+      "essential": true,
+	  "memory": 400,
+      "portMappings": [
+        {
+          "hostPort": 2222,
+          "containerPort": 2222
+        }
+      ]
+    }
+  ]
+}
