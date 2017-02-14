@@ -16,13 +16,9 @@ phases:
       - mv discovery-microservice/target/discovery-microservice-0.0.1.jar discovery 
   build:
     commands:
-      - cd view
-      - ls
-      - docker build -t blackdev92/view-microservice .
+      - docker build -t blackdev92/view-microservice view
       - docker push blackdev92/view-microservice
-      - cd ../controller
-      - docker build -t blackdev92/controller-microservice .
+      - docker build -t blackdev92/controller-microservice controller
       - docker push blackdev92/controller-microservice
-      - cd ../discovery
-      - docker build -t blackdev92/discovery-microservice .
+      - docker build -t blackdev92/discovery-microservice discovery
       - docker push blackdev92/discovery-microservice
